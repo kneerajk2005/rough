@@ -4,38 +4,34 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
+    
         stage('Install Dependencies') {
-            steps {
-                bat 'python -m pip install -r requirements.txt'
-            }
-        }
+    steps {
+        bat 'python --version'
+        bat 'python -m pip install -r requirements.txt'
+    }
+}
 
-        stage('Build') {
-            steps {
-                echo 'Building Flask application...'
+stage('Build') {
+    steps {
+        echo 'Building Flask application...'
 
-                bat '''
-                    if exist build rmdir /S /Q build
-                    mkdir build
-                    xcopy /E /I /Y app.py build\\
-                    xcopy /E /I /Y requirements.txt build\\
-                    xcopy /E /I /Y templates build\\templates\\
-                    xcopy /E /I /Y tests build\\tests\\
-                '''
-            }
-        }
+        bat '''
+            if exist build rmdir /S /Q build
+            mkdir build
+            xcopy /E /I /Y app.py build\\
+            xcopy /E /I /Y requirements.txt build\\
+            xcopy /E /I /Y templates build\\templates\\
+            xcopy /E /I /Y tests build\\tests\\
+        '''
+    }
+}
 
-        stage('Test') {
-            steps {
-                bat 'pytest'
-            }
-        }
+stage('Test') {
+    steps {
+        bat 'python -m pytest'
+    }
+}
 
         stage('Package') {
             steps {
